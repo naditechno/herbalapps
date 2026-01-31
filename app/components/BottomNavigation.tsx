@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Home, Clock, BookOpen, GraduationCap, BookMarked } from "lucide-react";
+import { Home, LayoutGrid, Award, ShoppingBag, User } from "lucide-react";
 import { useI18n } from "@/app/hooks/useI18n";
 
 // --- TYPES ---
@@ -10,61 +10,67 @@ type LocaleCode = "id" | "en" | "ar" | "fr" | "kr" | "jp";
 
 interface NavLabels {
   home: string;
-  prayer: string;
-  quran: string;
-  study: string;
-  books: string;
+  menu: string;
+  vip: string;
+  merch: string;
+  profile: string;
+  auth: string;
 }
 
-// --- TRANSLATION DICTIONARY ---
 const NAV_TEXT: Record<LocaleCode, NavLabels> = {
   id: {
     home: "Beranda",
-    prayer: "Sholat",
-    quran: "Al-Qur'an",
-    study: "Kajian",
-    books: "E-Book",
+    menu: "Menu",
+    vip: "VIP",
+    merch: "Merch",
+    profile: "Saya",
+    auth: "Daftar atau Masuk",
   },
   en: {
     home: "Home",
-    prayer: "Prayer",
-    quran: "Quran",
-    study: "Study",
-    books: "E-Book",
+    menu: "Menu",
+    vip: "VIP",
+    merch: "Merch",
+    profile: "Me",
+    auth: "Register or Login",
   },
   ar: {
     home: "الرئيسية",
-    prayer: "الصلاة",
-    quran: "القرآن",
-    study: "دروس",
-    books: "كتب",
+    menu: "القائمة",
+    vip: "كبار الشخصيات",
+    merch: "سلع",
+    profile: "أنا",
+    auth: "سجل أو دخول",
   },
   fr: {
     home: "Accueil",
-    prayer: "Prière",
-    quran: "Coran",
-    study: "Étude",
-    books: "E-Book",
+    menu: "Menu",
+    vip: "VIP",
+    merch: "Boutique",
+    profile: "Moi",
+    auth: "S'inscrire",
   },
   kr: {
     home: "홈",
-    prayer: "기도",
-    quran: "꾸란",
-    study: "공부",
-    books: "전자책",
+    menu: "메뉴",
+    vip: "VIP",
+    merch: "굿즈",
+    profile: "나",
+    auth: "가입하기",
   },
   jp: {
     home: "ホーム",
-    prayer: "礼拝",
-    quran: "コーラン",
-    study: "勉強",
-    books: "電子書籍",
+    menu: "メニュー",
+    vip: "VIP",
+    merch: "グッズ",
+    profile: "マイ",
+    auth: "登録する",
   },
 };
 
 interface NavItem {
   href: string;
-  key: keyof NavLabels; // Gunakan key dari NavLabels untuk mapping
+  key: keyof NavLabels;
   icon: React.ComponentType<{ className?: string }>;
 }
 
@@ -72,120 +78,95 @@ export default function BottomNavigation() {
   const pathname = usePathname();
   const { locale } = useI18n();
 
-  // Safe Locale Access
+  // Logic Session (Bisa disesuaikan dengan state auth aplikasi Anda)
+  const session = false;
+
   const safeLocale = (
     NAV_TEXT[locale as LocaleCode] ? locale : "id"
   ) as LocaleCode;
   const t_nav = NAV_TEXT[safeLocale];
   const isRtl = safeLocale === "ar";
 
-  // Data NavItems (hanya struktur, label diambil dari dictionary)
   const navItems: NavItem[] = [
-    {
-      href: "/",
-      key: "home",
-      icon: Home,
-    },
-    {
-      href: "/sholat",
-      key: "prayer",
-      icon: Clock,
-    },
-    {
-      href: "/quran",
-      key: "quran",
-      icon: BookOpen,
-    },
-    {
-      href: "/kajian",
-      key: "study",
-      icon: GraduationCap,
-    },
-    {
-      href: "/ebook",
-      key: "books",
-      icon: BookMarked,
-    },
+    { href: "/", key: "home", icon: Home },
+    { href: "/menu", key: "menu", icon: LayoutGrid },
+    { href: "/vip", key: "vip", icon: Award },
+    { href: "/merch", key: "merch", icon: ShoppingBag },
+    { href: "/profile", key: "profile", icon: User },
   ];
 
   return (
-    <nav
-      className="fixed bottom-0 left-0 right-0 z-40 bg-background border-t border-awqaf-border-light safe-area-pb"
+    <div
+      className="fixed bottom-0 left-0 right-0 z-40 flex flex-col pointer-events-none"
       dir={isRtl ? "rtl" : "ltr"}
     >
-      {/* Background blur effect */}
-      <div className="absolute inset-0 bg-background/80 backdrop-blur-md"></div>
-
-      {/* Navigation content */}
-      <div className="relative flex items-center justify-around px-2 py-2 max-w-md mx-auto">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          const label = t_nav[item.key];
-
-          return (
+      {/* 1. BUTTON DAFTAR/MASUK (Div Atas) */}
+      {!session && (
+        <div className="w-full max-w-md mx-auto px-4 pointer-events-auto">
+            <div className="bg-[#faf4e6] p-2 rounded-t-xl shadow-md">
             <Link
-              key={item.href}
-              href={item.href}
-              className={`
-                flex flex-col items-center justify-center p-2 rounded-xl transition-all duration-200 min-w-0 flex-1
-                ${
-                  isActive
-                    ? "bg-accent-100 text-awqaf-primary"
-                    : "text-awqaf-foreground-secondary hover:text-awqaf-primary hover:bg-accent-50"
-                }
-              `}
+              href="/auth/login"
+              className="flex items-center justify-center w-full py-3.5 text-white font-bold bg-[#3b5e40] rounded-xl shadow-md hover:bg-[#2d4a32] transition-transform active:scale-95"
             >
-              {/* Icon container */}
-              <div
-                className={`
-                relative flex items-center justify-center w-8 h-8 mb-1 transition-all duration-200
-                ${isActive ? "scale-110" : "scale-100"}
-              `}
-              >
-                <Icon
-                  className={`
-                    w-5 h-5 transition-all duration-200
-                    ${
-                      isActive
-                        ? "text-awqaf-primary"
-                        : "text-awqaf-foreground-secondary"
-                    }
-                  `}
-                />
-
-                {/* Active indicator dot */}
-                {isActive && (
-                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-awqaf-primary rounded-full animate-pulse"></div>
-                )}
-              </div>
-
-              {/* Label */}
-              <span
-                className={`
-                text-[10px] sm:text-xs font-medium transition-all duration-200 text-center leading-tight truncate w-full px-1
-                ${
-                  isActive
-                    ? "text-awqaf-primary font-semibold"
-                    : "text-awqaf-foreground-secondary"
-                }
-                font-comfortaa
-              `}
-              >
-                {label}
-              </span>
-
-              {/* Active background highlight */}
-              {isActive && (
-                <div className="absolute inset-0 bg-gradient-to-t from-accent-200/20 to-transparent rounded-xl pointer-events-none"></div>
-              )}
+              {t_nav.auth}
             </Link>
-          );
-        })}
-      </div>
+          </div>
+        </div>
+      )}
 
-      {/* Top border accent */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent-200 to-transparent"></div>
-    </nav>
+      {/* 2. NAVIGATION BAR (Div Bawah) */}
+      <nav className="w-full bg-[#faf4e6] border-t border-[#896b41]/10 shadow-[0_-10px_25px_rgba(0,0,0,0.06)] pointer-events-auto relative">
+        <div className="max-w-md mx-auto flex items-center justify-around px-2 relative h-16">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            const label = t_nav[item.key];
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="relative flex flex-col items-center justify-end flex-1 h-full pb-2 transition-all"
+              >
+                {/* KONDISI AKTIF: Ikon melayang ke atas dengan lengkungan */}
+                {isActive && (
+                  <div className="absolute top-[-24px] flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    {/* Background lengkungan/notch putih-cream */}
+                    <div className="absolute top-[-2px] w-[66px] h-[33px] bg-[#faf4e6] rounded-t-full border-t border-[#896b41]/10 -z-10 shadow-sm"></div>
+
+                    {/* Bulatan Ikon */}
+                    <div className="w-14 h-14 bg-[#faf4e6] rounded-full flex items-center justify-center border border-[#896b41]/10 shadow-sm">
+                      <div className="w-11 h-11 bg-[#d0aa47]/15 rounded-full flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-[#3b5e40]" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* KONDISI TIDAK AKTIF: Ikon diletakkan lebih rendah */}
+                {!isActive && (
+                  <div className="mb-1 opacity-50">
+                    <Icon className="w-6 h-6 text-[#896b41]" />
+                  </div>
+                )}
+
+                {/* LABEL TEKS */}
+                <span
+                  className={`
+                  text-[10px] font-bold transition-colors leading-none
+                  ${isActive ? "text-[#3b5e40]" : "text-[#896b41] opacity-50"}
+                `}
+                >
+                  {label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Area bawah untuk notch iPhone / Padding tambahan */}
+        <div className="h-4 bg-[#faf4e6] w-full"></div>
+      </nav>
+    </div>
   );
 }

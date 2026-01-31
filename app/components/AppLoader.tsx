@@ -87,7 +87,7 @@ export default function AppLoader({
             <div className="relative w-24 h-24 bg-white rounded-full shadow-lg border-4 border-accent-100 flex items-center justify-center z-10">
               <Image
                 src="/ibadahapp-logo.png"
-                alt="IbadahApp Logo"
+                alt="HerbalApp Logo"
                 width={64}
                 height={64}
                 className="w-16 h-16 object-contain"

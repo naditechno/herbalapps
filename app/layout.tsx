@@ -21,43 +21,43 @@ const tajawal = Tajawal({
 });
 
 export const metadata: Metadata = {
-  title: "IbadahApp - Aplikasi Ibadah Muslim",
+  title: "HerbalApps – Solusi Herbal Alami & Sehat",
   description:
-    "Aplikasi ibadah lengkap untuk umat Muslim dengan jadwal sholat, qibla, Al-Quran dan fitur ibadah lainnya",
+    "HerbalApps adalah aplikasi produk herbal alami untuk kesehatan, perawatan tubuh, dan gaya hidup sehat berbasis bahan alami.",
   keywords: [
-    "ibadah",
-    "muslim",
-    "islam",
-    "sholat",
-    "qibla",
-    "quran",
-    "jadwal sholat",
-    "aplikasi islam",
+    "herbal",
+    "obat herbal",
+    "kesehatan alami",
+    "produk herbal",
+    "jamu",
+    "herbal indonesia",
+    "toko herbal",
+    "herbal apps",
   ],
-  authors: [{ name: "NadiTechno" }],
-  creator: "NadiTechno",
-  publisher: "NadiTechno",
+  authors: [{ name: "HerbalApps Team" }],
+  creator: "HerbalApps",
+  publisher: "HerbalApps",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL("https://ibadahapp.com"),
+  metadataBase: new URL("https://herbalapps.com"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "IbadahApp - Aplikasi Ibadah Muslim",
+    title: "HerbalApps – Solusi Herbal Alami & Sehat",
     description:
-      "Aplikasi ibadah lengkap untuk umat Muslim dengan jadwal sholat, qibla, Al-Quran dan fitur ibadah lainnya",
-    url: "https://ibadahapp.com",
-    siteName: "IbadahApp",
+      "Temukan berbagai produk herbal alami untuk kesehatan, perawatan tubuh, dan gaya hidup sehat dalam satu aplikasi.",
+    url: "https://herbalapps.com",
+    siteName: "HerbalApps",
     images: [
       {
         url: "/icons/icon-512x512.png",
         width: 512,
         height: 512,
-        alt: "IbadahApp Logo",
+        alt: "HerbalApps Logo",
       },
     ],
     locale: "id_ID",
@@ -65,9 +65,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "IbadahApp - Aplikasi Ibadah Muslim",
+    title: "HerbalApps – Solusi Herbal Alami & Sehat",
     description:
-      "Aplikasi ibadah lengkap untuk umat Muslim dengan jadwal sholat, qibla, Al-Quran dan fitur ibadah lainnya",
+      "Aplikasi produk herbal alami untuk kesehatan dan gaya hidup sehat.",
     images: ["/icons/icon-512x512.png"],
   },
   robots: {
@@ -94,14 +94,14 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "IbadahApp",
+    title: "HerbalApps",
   },
   other: {
     "mobile-web-app-capable": "yes",
     "apple-mobile-web-app-capable": "yes",
     "apple-mobile-web-app-status-bar-style": "default",
-    "msapplication-TileColor": "#059669",
-    "theme-color": "#059669",
+    "msapplication-TileColor": "#16a34a",
+    "theme-color": "#16a34a",
   },
 };
 
@@ -117,12 +117,13 @@ export default function RootLayout({
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
         />
-        <meta name="theme-color" content="#059669" />
+        <meta name="theme-color" content="#16a34a" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="IbadahApp" />
-        <meta name="msapplication-TileColor" content="#059669" />
+        <meta name="apple-mobile-web-app-title" content="HerbalApps" />
+        <meta name="msapplication-TileColor" content="#16a34a" />
         <meta name="msapplication-tap-highlight" content="no" />
+
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icons/icon-152x152.png" />
         <link
@@ -138,22 +139,24 @@ export default function RootLayout({
           href="/icons/icon-512x512.png"
         />
       </head>
+
       <body className={`${comfortaa.variable} ${tajawal.variable} antialiased`}>
         <ReduxProvider>
           <AppWrapper>{children}</AppWrapper>
           <NavigationWrapper />
           <PWAInstaller />
+
           <script
             dangerouslySetInnerHTML={{
               __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
+                window.addEventListener('load', function () {
                   navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
+                    .then(function (registration) {
                       console.log('SW registered: ', registration);
                     })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
+                    .catch(function (error) {
+                      console.log('SW registration failed: ', error);
                     });
                 });
               }

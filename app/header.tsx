@@ -60,14 +60,25 @@ export default function Header({ onScanClick }: HeaderProps) {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
 
+  // State untuk waktu (AM/PM) dan mounting check
+  const [isPm, setIsPm] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
   // Safe Locale Access
   const safeLocale = (
     HEADER_TEXT[locale as LocaleCode] ? locale : "id"
   ) as LocaleCode;
   const t = HEADER_TEXT[safeLocale];
 
-  // Menutup dropdown saat klik di luar area
   useEffect(() => {
+    // Set mounted true untuk menghindari hydration mismatch pada image
+    setMounted(true);
+
+    // Cek waktu saat ini
+    const hours = new Date().getHours();
+    // PM dianggap dari jam 12 siang sampai 11:59 malam
+    setIsPm(hours >= 12 && hours < 24);
+
     function handleClickOutside(event: MouseEvent) {
       if (
         dropdownRef.current &&
@@ -91,13 +102,74 @@ export default function Header({ onScanClick }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-[#896b41]/10 w-full max-w-md mx-auto rounded-b-xl">
-      <div className="max-w-md mx-auto px-4 pt-5 pb-4">
+    <header
+      className={`sticky top-0 z-30 w-full max-w-md mx-auto rounded-b-xl relative overflow-hidden border-b border-[#896b41]/10 transition-all duration-500 ease-in-out ${
+        isPm
+          ? "bg-gradient-to-b from-[#0f172a] to-[#1e293b]" // Night: Dark Gradient
+          : "bg-gradient-to-b from-sky-200/50 via-white/95 to-white/95 backdrop-blur-md" // Day: Blue top gradient to white
+      }`}
+    >
+      {/* --- DEKORASI BACKGROUND (SUN/MOON + CLOUD) --- */}
+      {mounted && (
+        <div className="absolute top-0 left-0 w-[140px] h-[100px] pointer-events-none select-none z-0">
+          {/* Gambar Utama: Moon (PM) atau Sun (AM) */}
+          <div className="absolute -top-4 -left-4 w-[90px] h-[90px]">
+            <Image
+              src={isPm ? "/images/moon.png" : "/images/sun.png"}
+              alt={isPm ? "Moon" : "Sun"}
+              fill
+              className="object-contain opacity-90"
+              priority
+            />
+          </div>
+
+          {/* Gambar Awan */}
+          <div className="absolute top-[35px] left-[45px] w-[50px] h-[35px]">
+            <Image
+              src="/images/cloud.png"
+              alt="Cloud"
+              fill
+              className="object-contain opacity-95"
+            />
+          </div>
+          <div className="absolute top-[10px] left-[2px] w-[50px] h-[35px]">
+            <Image
+              src="/images/cloud2.png"
+              alt="Cloud"
+              fill
+              className="object-contain opacity-95"
+            />
+          </div>
+          <div className="absolute top-[40px] left-0 w-[50px] h-[35px]">
+            <Image
+              src="/images/cloud3.png"
+              alt="Cloud"
+              fill
+              className="object-contain opacity-95"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Konten Header */}
+      <div className="max-w-md mx-auto px-4 pt-5 pb-4 relative z-10">
         {/* Baris Atas: Sapaan & Logout */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 font-comfortaa">
-            <span className="text-gray-500 text-sm font-medium">{t.hi}</span>
-            <span className="text-[#3b5e40] text-sm font-bold">Guest</span>
+          <div className="flex items-center gap-1.5 font-comfortaa pl-16">
+            <span
+              className={`text-sm font-medium transition-colors ${
+                isPm ? "text-gray-200" : "text-gray-500"
+              }`}
+            >
+              {t.hi}
+            </span>
+            <span
+              className={`text-sm font-bold transition-colors ${
+                isPm ? "text-green-300" : "text-[#3b5e40]"
+              }`}
+            >
+              Guest
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -105,7 +177,7 @@ export default function Header({ onScanClick }: HeaderProps) {
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="p-2 bg-white rounded-full shadow-sm border border-[#896b41]/10 text-red-500 active:scale-95 transition-all hover:bg-red-50"
+              className="p-2 bg-white/90 rounded-full shadow-sm border border-[#896b41]/10 text-red-500 active:scale-95 transition-all hover:bg-red-50"
             >
               {isLoggingOut ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -121,7 +193,7 @@ export default function Header({ onScanClick }: HeaderProps) {
           {/* Bagian Pilih Outlet */}
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex-1 flex items-center justify-between px-4 py-3.5 outline-none group"
+            className="flex-1 flex items-center justify-between px-4 py-2 outline-none group"
           >
             <div className="flex items-center gap-3">
               {/* Logo Brand */}

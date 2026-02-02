@@ -190,7 +190,7 @@ export default function BottomNavigation() {
 
   const navItems: NavItem[] = [
     { href: "/", key: "home", icon: Home },
-    { href: "/menu", key: "menu", icon: LayoutGrid },
+    { href: "/menu-list", key: "menu", icon: LayoutGrid },
     { href: "/vip", key: "vip", icon: Award },
     { href: "/merch", key: "merch", icon: ShoppingBag },
     { href: "/profile", key: "profile", icon: User },
@@ -269,8 +269,6 @@ export default function BottomNavigation() {
               {/* VIEW 2: PHONE INPUT & GOOGLE */}
               {authView === "phone" && (
                 <div className="animate-in slide-in-from-right duration-300">
-                  {/* Header: Back Button & Title */}
-                  {/* UPDATE: Menggunakan elemen <button> pembungkus agar area klik lebih luas */}
                   <button
                     onClick={() => setAuthView("selection")}
                     className="flex items-center gap-2 mb-6 border border-[#d0aa47] rounded-lg p-2.5 w-fit hover:bg-gray-50 transition-colors"

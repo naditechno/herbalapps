@@ -6,9 +6,11 @@ import BottomNavigation from "./components/BottomNavigation";
 export default function NavigationWrapper() {
   const pathname = usePathname();
 
-  const hiddenPaths = ["/auth/login", "/auth/register", "/login", "/register"];
+  const hiddenPaths = ["/auth/login", "/auth/register", "/login", "/register", "/menu"];
 
-  const shouldHideNavigation = hiddenPaths.includes(pathname);
+  const shouldHideNavigation =
+    hiddenPaths.includes(pathname) ||
+    pathname.startsWith("/menu/")
 
   if (shouldHideNavigation) {
     return null;

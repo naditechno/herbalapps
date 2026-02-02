@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react"; // 1. Import useSession
 import {
   Home,
   LayoutGrid,
@@ -37,7 +38,7 @@ interface AuthTranslations {
   continue: string;
   or: string;
   google: string;
-  forgotPassword: string; // Added Type
+  forgotPassword: string;
 }
 
 // --- DICTIONARIES ---
@@ -174,8 +175,10 @@ export default function BottomNavigation() {
   const pathname = usePathname();
   const { locale } = useI18n();
 
-  // Logic Session & Modal State
-  const session = false;
+  // 2. Gunakan hook useSession untuk cek status login
+  const { data: session } = useSession();
+
+  // Modal State
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authView, setAuthView] = useState<"selection" | "phone">("selection");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -224,7 +227,7 @@ export default function BottomNavigation() {
         >
           {/* Modal Content */}
           <div className="w-full max-w-md mx-auto bg-white rounded-t-2xl overflow-hidden shadow-2xl relative animate-in slide-in-from-bottom duration-300">
-            {/* Close Button (Absolute Top Right) */}
+            {/* Close Button */}
             <button
               onClick={handleClose}
               className="absolute top-4 right-4 z-10 p-1 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
@@ -251,7 +254,7 @@ export default function BottomNavigation() {
                     />
                   </button>
 
-                  {/* Tombol WhatsApp (Highlight) */}
+                  {/* Tombol WhatsApp */}
                   <button className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-lg px-4 py-3 flex items-center justify-center gap-3 shadow-md active:scale-[0.98] transition-all">
                     <MessageCircle className="w-6 h-6 fill-white" />
                     <span className="font-bold text-base">
@@ -311,7 +314,7 @@ export default function BottomNavigation() {
                     {t_auth.continue}
                   </button>
 
-                  {/* UPDATE: Button Forget Password */}
+                  {/* Forgot Password */}
                   <button className="w-full mt-3 text-xs font-bold text-[#3b5e40] hover:underline transition-all">
                     {t_auth.forgotPassword}
                   </button>
@@ -328,7 +331,6 @@ export default function BottomNavigation() {
 
                   {/* Google Button */}
                   <button className="w-full border border-gray-300 rounded-full py-3 flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors">
-                    {/* Google Icon SVG */}
                     <svg
                       width="20"
                       height="20"
@@ -369,6 +371,7 @@ export default function BottomNavigation() {
         dir={isRtl ? "rtl" : "ltr"}
       >
         {/* 1. BUTTON DAFTAR/MASUK (Div Atas) */}
+        {/* HANYA TAMPIL JIKA SESSION KOSONG (BELUM LOGIN) */}
         {!session && (
           <div className="w-full max-w-md mx-auto px-4 pointer-events-auto">
             <div className="bg-[#faf4e6] p-2 rounded-t-xl shadow-md">
@@ -396,13 +399,10 @@ export default function BottomNavigation() {
                   href={item.href}
                   className="relative flex flex-col items-center justify-end flex-1 h-full pb-2 transition-all"
                 >
-                  {/* KONDISI AKTIF: Ikon melayang ke atas dengan lengkungan */}
+                  {/* KONDISI AKTIF */}
                   {isActive && (
                     <div className="absolute top-[-24px] flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-300">
-                      {/* Background lengkungan/notch putih-cream */}
                       <div className="absolute top-[-2px] w-[66px] h-[33px] bg-[#faf4e6] rounded-t-full border-t border-[#896b41]/10 -z-10 shadow-sm"></div>
-
-                      {/* Bulatan Ikon */}
                       <div className="w-14 h-14 bg-[#faf4e6] rounded-full flex items-center justify-center border border-[#896b41]/10 shadow-sm">
                         <div className="w-11 h-11 bg-[#d0aa47]/15 rounded-full flex items-center justify-center">
                           <Icon className="w-6 h-6 text-[#3b5e40]" />
@@ -411,14 +411,13 @@ export default function BottomNavigation() {
                     </div>
                   )}
 
-                  {/* KONDISI TIDAK AKTIF: Ikon diletakkan lebih rendah */}
+                  {/* KONDISI TIDAK AKTIF */}
                   {!isActive && (
                     <div className="mb-1 opacity-50">
                       <Icon className="w-6 h-6 text-[#896b41]" />
                     </div>
                   )}
 
-                  {/* LABEL TEKS */}
                   <span
                     className={`
                   text-[10px] font-bold transition-colors leading-none
@@ -431,8 +430,6 @@ export default function BottomNavigation() {
               );
             })}
           </div>
-
-          {/* Area bawah untuk notch iPhone / Padding tambahan */}
           <div className="h-4 bg-[#faf4e6] w-full"></div>
         </nav>
       </div>
